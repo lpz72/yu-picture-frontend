@@ -1,7 +1,7 @@
 <template>
   <div id="homePage">
     <h1>
-      欢迎来到智能云图库
+      欢迎来到绘联云库
     </h1>
 
   </div>

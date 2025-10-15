@@ -9,7 +9,7 @@
       </a-layout-content>
       <a-layout-footer class="footer">
         <a href="https://github.com/" target="_blank">
-          智能云图库 by lpz
+          绘联云库 by lpz
         </a>
       </a-layout-footer>
     </a-layout>
