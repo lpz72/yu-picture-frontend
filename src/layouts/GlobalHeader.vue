@@ -63,15 +63,25 @@ const loginUserStore = useLoginUserStore()
 const routers = Router.getRoutes()
 const originItems = [
   {
-    key: routers[routers.length - 1].path,
+    key: "/",
     icon: () => h(HomeOutlined),
     label: '主页',
     title: '主页',
   },
   {
-    key: routers[2].path,
+    key: "/admin/userManager",
     label: '用户管理',
     title: '用户管理',
+  },
+  {
+    key: "/add_picture",
+    label: '创建图片',
+    title: '创建图片',
+  },
+  {
+    key: "/admin/pictureManager",
+    label: '图片管理',
+    title: '图片管理',
   },
   {
     key: 'others',
