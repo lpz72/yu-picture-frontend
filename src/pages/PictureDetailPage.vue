@@ -25,6 +25,7 @@
           <a-descriptions-item label="简介">{{picture?.introduction ?? '-'}}</a-descriptions-item>
           <a-descriptions-item label="分类">{{picture?.category ?? '-'}}</a-descriptions-item>
           <a-descriptions-item label="标签">
+            <div v-if="picture?.tags?.length === 0">{{'-'}}</div>
             <a-tag v-for="tag in picture?.tags">
               {{tag}}
             </a-tag>
@@ -38,7 +39,14 @@
               <a-space wrap>
                 <a-button type="primary" :icon="h(DownloadOutlined)" @click="doDownload">免费下载</a-button>
                 <a-button :icon="h(EditOutlined)" v-if="canEdit" @click="doEdit">编辑</a-button>
-                <a-button danger :icon="h(DeleteOutlined)" v-if="canEdit" @click="doDelete">删除</a-button>
+                <a-popconfirm
+                  title="是否确认删除?"
+                  ok-text="是"
+                  cancel-text="否"
+                  @confirm="doDelete"
+                >
+                  <a-button danger :icon="h(DeleteOutlined)" v-if="canEdit">删除</a-button>
+                </a-popconfirm>
               </a-space>
             </a-descriptions-item>
           </a-descriptions>

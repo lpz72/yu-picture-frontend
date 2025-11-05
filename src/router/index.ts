@@ -38,13 +38,13 @@ const router = createRouter({
       component: AddPicturePage
     },
     {
-      path: '/admin/PictureManager',
+      path: '/admin/pictureManager',
       name: '图片管理',
       component: PictureManagerPage
     },
     {
       path: '/picture/:id',
-      name: '图片管理',
+      name: '图片详情',
       component: PictureDetailPage,
       props: true
     },
