@@ -188,5 +188,9 @@ onMounted(() => {
   font-size: 15px;
 }
 
+:deep(.ant-pagination) {
+  margin-bottom: 16px;
+}
+
 
 </style>
