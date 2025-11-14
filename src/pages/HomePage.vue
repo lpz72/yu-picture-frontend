@@ -69,7 +69,11 @@
 <script setup lang="ts">
 
 import { computed, onMounted, reactive, ref } from 'vue'
-import { listPictureTagCategoryUsingGet, listPictureVoByPageUsingPost } from '@/api/pictureController'
+import {
+  listPictureTagCategoryUsingGet,
+  listPictureVoByPageUsingPost,
+  listPictureVoByPageWithCacheUsingPost
+} from '@/api/pictureController'
 import { message } from 'ant-design-vue'
 import { useRouter } from 'vue-router'
 
@@ -86,7 +90,7 @@ const currentTags = ref([])
 //搜索条件
 const searchParams = reactive<API.PictureQueryRequest>({
   current: 1,
-  pageSize: 12,
+  pageSize: 10,
   sortField: 'createTime',
   sortOrder: 'descend',
 })
@@ -102,7 +106,7 @@ const fetchData = async () => {
     }
   })
 
-  const res = await listPictureVoByPageUsingPost({
+  const res = await listPictureVoByPageWithCacheUsingPost({
     category: currentCategory.value === "all" ? null : currentCategory.value,
     tags: tags.length === 0 ? null : tags,
     ...searchParams
