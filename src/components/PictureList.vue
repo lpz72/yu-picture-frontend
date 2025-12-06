@@ -28,6 +28,11 @@
             </a-card-meta>
             <template v-if="showOp" #actions>
 
+              <a-space @click="e => doShare(item,e)">
+                <share-alt-outlined/>
+                分享
+              </a-space>
+
               <a-space @click="e => doSearch(item,e)">
                 <a-popover trigger="hover">
                   <template #content>
@@ -54,21 +59,26 @@
                   删除
                 </a-popconfirm>
               </a-space>
+
             </template>
           </a-card>
         </a-list-item>
       </template>
     </a-list>
+
+    <ShareModal  ref="shareModalRef" :link="link" />
   </div>
 </template>
 
 <script setup lang="ts">
 
 import { useRouter } from 'vue-router'
-import { EditOutlined,DeleteOutlined, SearchOutlined} from '@ant-design/icons-vue'
+import { EditOutlined,DeleteOutlined, SearchOutlined,ShareAltOutlined} from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'
 import { deletePictureUsingPost } from '@/api/pictureController'
 import { formatSize } from '@/utils'
+import ShareModal from '@/components/ShareModal.vue'
+import { ref } from 'vue'
 
 interface Props {
   dataList: API.PictureVO[],
@@ -89,6 +99,21 @@ const toDetail = (id: number) => {
   router.push({
     path: `/picture/${id}`
   })
+}
+
+// 分享链接
+const link = ref()
+// 分享弹窗引用
+const shareModalRef = ref()
+
+// 分享图片，打开模态框
+const doShare = (picture,e) => {
+  e.stopPropagation()
+  link.value = `${window.location.protocol}//${window.location.host}/picture/${picture.id}`
+  if (shareModalRef.value) {
+    shareModalRef.value.openModal()
+  }
+
 }
 
 // 跳转到以图搜图页面

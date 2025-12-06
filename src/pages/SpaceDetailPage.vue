@@ -5,6 +5,8 @@
       <h2 style="margin-bottom: 16px">{{space?.spaceName}}（私有空间）</h2>
       <a-space>
         <a-button :icon=h(PlusOutlined) type="primary" :href="`/add_picture/?spaceId=${props.id}`" target="_blank">创建图片</a-button>
+        <a-button :icon=h(EditOutlined) type="primary" @click="doBatchEdit">批量编辑</a-button>
+
         <a-popover title="使用情况" trigger="hover">
           <template #content>
             {{formatSize(space?.totalSize)}} / {{formatSize(space?.maxSize)}}
@@ -33,6 +35,12 @@
       :show-total="() => `图片总数 ${total} / ${space.maxCount}`"
       @change="onPageChange"
     />
+
+    <BatchEditPictureModal ref="batchEditPicture"
+      :pictureList="dataList"
+      :spaceId="id"
+      :onSuccess="batchEditOnSuccess"
+    />
   </div>
 </template>
 
@@ -47,12 +55,14 @@ import {
 import { message } from 'ant-design-vue'
 import { useRoute, useRouter } from 'vue-router'
 import PictureList from '@/components/PictureList.vue'
-import { PlusOutlined } from '@ant-design/icons-vue'
+import { EditOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import { formatSize } from '@/utils'
 import { getSpaceByIdUsingGet, getSpaceVoByIdUsingGet } from '@/api/spaceController'
 import PictureSearchForm from '@/components/PictureSearchForm.vue'
 import Vue3ColorPicker, { ColorPicker } from 'vue3-colorpicker'
 import "vue3-colorpicker/style.css";
+import ShareModal from '@/components/ShareModal.vue'
+import BatchEditPictureModal from '@/components/BatchEditPictureModal.vue'
 
 const dataList = ref([])
 const loading = ref(true)
@@ -133,7 +143,21 @@ const onColorChange = async (color: string) => {
   }
 }
 
+// 接受子组件暴露的函数
+const batchEditPicture = ref()
 
+// 点击批量编辑按钮，打开弹窗
+const doBatchEdit = () => {
+  if (batchEditPicture.value) {
+    batchEditPicture.value.openModal()
+  }
+}
+
+// 批量编辑成功后的回调函数
+const batchEditOnSuccess = () => {
+  // 重新获取数据
+  fetchData()
+}
 
 onMounted(() => {
   fetchData()

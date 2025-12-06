@@ -53,6 +53,7 @@
             <a-descriptions-item >
               <a-space wrap>
                 <a-button type="primary" :icon="h(DownloadOutlined)" @click="doDownload">免费下载</a-button>
+                <a-button type="primary" ghost :icon="h(ShareAltOutlined)"  @click="doShare">分享</a-button>
                 <a-button :icon="h(EditOutlined)" v-if="canEdit" @click="doEdit">编辑</a-button>
                 <a-popconfirm
                   title="是否确认删除?"
@@ -68,6 +69,8 @@
         </a-card>
       </a-col>
     </a-row>
+
+    <ShareModal  ref="shareModalRef" :link="link" />
   </div>
 </template>
 
@@ -84,8 +87,9 @@ import {
 import { message } from 'ant-design-vue'
 import { useRoute, useRouter } from 'vue-router'
 import { downloadImage, formatSize } from '@/utils'
-import { EditOutlined,DeleteOutlined,DownloadOutlined} from '@ant-design/icons-vue'
+import { EditOutlined, DeleteOutlined, DownloadOutlined, ShareAltOutlined } from '@ant-design/icons-vue'
 import { useLoginUserStore } from '@/stores/useLoginUserStore'
+import ShareModal from '@/components/ShareModal.vue'
 
 const picture = ref<API.PictureVO>()
 
@@ -161,6 +165,20 @@ const doDownload = () => {
 onMounted(() => {
   fetchPictureDetail()
 })
+
+// 分享链接
+const link = ref()
+// 分享弹窗引用
+const shareModalRef = ref()
+
+// 分享图片，打开模态框
+const doShare = () => {
+  link.value = `${window.location.protocol}//${window.location.host}/picture/${props.id}`
+  if (shareModalRef.value) {
+    shareModalRef.value.openModal()
+  }
+
+}
 
 </script>
 
