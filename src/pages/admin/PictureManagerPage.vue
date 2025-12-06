@@ -190,7 +190,8 @@ const searchParams = reactive<API.PictureQueryRequest>({
 const fetchData = async () => {
   console.log(searchParams)
   const res = await listPictureByPageUsingPost({
-    ...searchParams
+    ...searchParams,
+    nullSpaceId: true
   })
   if (res.data) {
     dataList.value = res.data.records ?? []

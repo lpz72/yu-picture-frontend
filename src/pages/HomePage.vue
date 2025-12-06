@@ -32,37 +32,14 @@
     </div>
 
     <!-- 数据展示 -->
-    <a-list :grid="{ gutter: 16, xs: 1, sm: 2, md: 3, lg: 4, xl: 5, xxl: 6 }"
-            :data-source="dataList"
-            :pagination="pagination"
-            :loading="loading"
-    >
-      <template #renderItem="{ item }">
-        <a-list-item style="padding: 0">
-          <!-- 单张图片 -->
-<!--          <a-card hoverable @click="doChange(item.id)">-->
-          <a-card hoverable @click="toDetail(item.id)">
-            <template #cover>
-              <img
-                style="height: 220px;object-fit: cover"
-                :alt="item.name"
-                :src="item.url" />
-            </template>
-            <a-card-meta :title="item.name" style="height: 80px">
-              <template #description>
-                <a-flex wrap="wrap" :gap="3">
-                  <a-tag color="blue">
-                    {{item.category ?? '默认'}}
-                  </a-tag>
-                  <a-tag v-for="tag in item.tags" color="green" >{{tag}}</a-tag>
-                </a-flex>
-              </template>
-            </a-card-meta>
-          </a-card>
-        </a-list-item>
-      </template>
-    </a-list>
-
+    <PictureList :dataList="dataList" :loading="loading" />
+    <a-pagination
+      style="text-align: right"
+      v-model:current="searchParams.current"
+      v-model:pageSize="searchParams.pageSize"
+      :total="total"
+      @change="onPageChange"
+    />
   </div>
 </template>
 
@@ -76,6 +53,7 @@ import {
 } from '@/api/pictureController'
 import { message } from 'ant-design-vue'
 import { useRouter } from 'vue-router'
+import PictureList from '@/components/PictureList.vue'
 
 const dataList = ref([])
 const loading = ref(true)
@@ -121,19 +99,26 @@ const fetchData = async () => {
 }
 
 // 分页参数,面对用户，不用展示实际总共多少条图片
-const pagination = computed(() => {
-  return {
-    current: searchParams.current ?? 1,
-    pageSize: searchParams.pageSize ?? 10,
-    total: total.value,
-    // 切换页号或页面大小时，会修改搜索参数
-    onChange: (page,pageSize) => {
-      searchParams.current = page;
-      searchParams.pageSize = pageSize;
-      fetchData()
-    }
-  }
-})
+// const onPageChange = computed(() => {
+//   return {
+//     current: searchParams.current ?? 1,
+//     pageSize: searchParams.pageSize ?? 10,
+//     total: total.value,
+//     showSizeChanger: true,
+//     // 切换页号或页面大小时，会修改搜索参数
+//     onChange: (page,pageSize) => {
+//       searchParams.current = page;
+//       searchParams.pageSize = pageSize;
+//       fetchData()
+//     }
+//   }
+// })
+
+const onPageChange = (page,pageSize) => {
+    searchParams.current = page;
+    searchParams.pageSize = pageSize;
+    fetchData()
+}
 
 // 搜索
 const doSearch = async () => {

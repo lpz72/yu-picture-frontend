@@ -9,6 +9,12 @@ import AddPicturePage from '@/pages/AddPicturePage.vue'
 import PictureManagerPage from '@/pages/admin/PictureManagerPage.vue'
 import PictureDetailPage from '@/pages/PictureDetailPage.vue'
 import AddPictureBatchPage from '@/pages/AddPictureBatchPage.vue'
+import SpaceManagerPage from '@/pages/admin/SpaceManagerPage.vue'
+import AddSpacePage from '@/pages/AddSpacePage.vue'
+import SpaceDetailPage from '@/pages/SpaceDetailPage.vue'
+import MySpacePage from '@/pages/MySpacePage.vue'
+import PictureSearchForm from '@/components/PictureSearchForm.vue'
+import SearchPicturePage from '@/pages/SearchPicturePage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -38,6 +44,7 @@ const router = createRouter({
       name: '创建图片',
       component: AddPicturePage
     },
+
     {
       path: '/add_picture/batch',
       name: '批量创建图片',
@@ -49,10 +56,36 @@ const router = createRouter({
       component: PictureManagerPage
     },
     {
+      path: '/add_space',
+      name: '创建空间',
+      component: AddSpacePage
+    },
+    {
+      path: '/admin/spaceManager',
+      name: '空间管理',
+      component: SpaceManagerPage
+    },
+    {
       path: '/picture/:id',
       name: '图片详情',
       component: PictureDetailPage,
       props: true
+    },
+    {
+      path: '/space/:id',
+      name: '空间详情',
+      component: SpaceDetailPage,
+      props: true
+    },
+    {
+      path: '/my_space',
+      name: '我的空间',
+      component: MySpacePage,
+    },
+    {
+      path: '/search_picture',
+      name: '图片搜索',
+      component: SearchPicturePage,
     },
   ],
 })

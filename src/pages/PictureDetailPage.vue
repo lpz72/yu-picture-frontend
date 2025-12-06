@@ -35,6 +35,21 @@
             <a-descriptions-item label="宽度">{{picture?.picWidth ?? '-'}}</a-descriptions-item>
             <a-descriptions-item label="宽高比">{{picture?.picScale ?? '-'}}</a-descriptions-item>
             <a-descriptions-item label="大小">{{formatSize(picture?.picSize)}}</a-descriptions-item>
+            <a-descriptions-item label="主色调">
+              <a-space>
+                {{picture?.picColor ?? '-'}}
+                <div
+                  v-if="picture?.picColor"
+                  :style="{
+                   background: `#${picture.picColor.slice(2)}`,
+                   width: '16px',
+                   height: '16px'
+                  }"
+                />
+              </a-space>
+
+            </a-descriptions-item>
+
             <a-descriptions-item >
               <a-space wrap>
                 <a-button type="primary" :icon="h(DownloadOutlined)" @click="doDownload">免费下载</a-button>
@@ -112,7 +127,14 @@ const canEdit = computed(() => {
 const router = useRouter()
 // 编辑事件
 const doEdit = () => {
-  router.push("/add_picture?id=" + picture.value?.id)
+  router.push({
+    path:"/add_picture",
+    query: {
+      id: picture.value?.id,
+      spaceId: picture.value?.spaceId
+
+    }
+  })
 }
 
 // 删除事件
