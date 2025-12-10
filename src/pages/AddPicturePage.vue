@@ -15,6 +15,27 @@
       </a-tab-pane>
     </a-tabs>
 
+    <div v-if="picture" class="edit-bar">
+      <a-space>
+        <a-button :icon="h(EditOutlined)" @click="doEditPicture">编辑图片</a-button>
+        <a-button :icon="h(EditOutlined)" @click="doOutPaintingPicture">AI扩图</a-button>
+
+      </a-space>
+      <ImageCropper
+        ref="imageCropperRef"
+        :imageUrl="picture?.url"
+        :picture="picture"
+        :spaceId="spaceId"
+        :onSuccess="onCropSuccess"
+      />
+      <ImageOutPainting
+        ref="imageOutPaintingRef"
+        :picture="picture"
+        :spaceId="spaceId"
+        :onSuccess="onOutPaintingSuccess"
+      />
+    </div>
+
     <a-form
       v-if="picture || route.query?.id"
       layout="vertical"
@@ -81,11 +102,14 @@
 <script setup lang="ts">
 
 import PictureUpload from '@/components/PictureUpload.vue'
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, h, onMounted, reactive, ref } from 'vue'
 import { editPictureUsingPost, getPictureVoByIdUsingGet, listPictureTagCategoryUsingGet } from '@/api/pictureController'
 import { message } from 'ant-design-vue'
 import { useRoute, useRouter } from 'vue-router'
 import UrlPictureUpload from '@/components/UrlPictureUpload.vue'
+import ImageCropper from '@/components/ImageCropper.vue'
+import { EditOutlined } from '@ant-design/icons-vue'
+import ImageOutPainting from '@/components/ImageOutPainting.vue'
 
 const picture = ref<API.PictureVO>()
 const pictureForm = reactive<API.PictureEditRequest>({})
@@ -183,10 +207,42 @@ const getOldPicture = async () => {
 
 }
 
+// 编辑弹窗组件引用
+const imageCropperRef = ref()
+// 点击后打开弹窗
+const doEditPicture = () => {
+  if (imageCropperRef.value) {
+    imageCropperRef.value.openModal()
+  }
+}
+
+// 编辑图片成功后的回调函数
+const onCropSuccess = (newPicture: API.PictureVO) => {
+  picture.value = newPicture
+}
+
+// AI扩图弹窗组件引用
+const imageOutPaintingRef = ref()
+// 点击后打开弹窗
+const doOutPaintingPicture = () => {
+  if (imageOutPaintingRef.value) {
+    imageOutPaintingRef.value.openModal()
+  }
+}
+// 图片扩图成功后的回调函数
+const onOutPaintingSuccess = (newPicture: API.PictureVO) => {
+  picture.value = newPicture
+}
+
+
+
 onMounted(() => {
   getOldPicture()
   getTagsCategoryOptions()
 })
+
+
+
 
 </script>
 
@@ -194,6 +250,11 @@ onMounted(() => {
 #addPicturePage {
   max-width: 720px;
   margin: 0 auto;
+}
+
+#addPicturePage .edit-bar {
+  text-align: center;
+  margin: 16px 0;
 }
 
 </style>

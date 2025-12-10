@@ -77,7 +77,7 @@ const props = defineProps<{
 //搜索条件
 const searchParams = ref<API.PictureQueryRequest>({
   current: 1,
-  pageSize: 10,
+  pageSize: 12,
   sortField: 'createTime',
   sortOrder: 'descend',
 })

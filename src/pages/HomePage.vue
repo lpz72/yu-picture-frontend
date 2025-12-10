@@ -68,7 +68,7 @@ const currentTags = ref([])
 //搜索条件
 const searchParams = reactive<API.PictureQueryRequest>({
   current: 1,
-  pageSize: 10,
+  pageSize: 12,
   sortField: 'createTime',
   sortOrder: 'descend',
 })
