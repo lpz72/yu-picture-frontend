@@ -18,7 +18,7 @@
     <div v-if="picture" class="edit-bar">
       <a-space>
         <a-button :icon="h(EditOutlined)" @click="doEditPicture">编辑图片</a-button>
-        <a-button :icon="h(EditOutlined)" @click="doOutPaintingPicture">AI扩图</a-button>
+        <a-button :icon="h(FullscreenOutlined)" @click="doOutPaintingPicture">AI扩图</a-button>
 
       </a-space>
       <ImageCropper
@@ -108,7 +108,7 @@ import { message } from 'ant-design-vue'
 import { useRoute, useRouter } from 'vue-router'
 import UrlPictureUpload from '@/components/UrlPictureUpload.vue'
 import ImageCropper from '@/components/ImageCropper.vue'
-import { EditOutlined } from '@ant-design/icons-vue'
+import { EditOutlined,FullscreenOutlined } from '@ant-design/icons-vue'
 import ImageOutPainting from '@/components/ImageOutPainting.vue'
 
 const picture = ref<API.PictureVO>()

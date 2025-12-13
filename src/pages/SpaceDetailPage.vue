@@ -5,7 +5,8 @@
       <h2 style="margin-bottom: 16px">{{space?.spaceName}}（私有空间）</h2>
       <a-space>
         <a-button :icon=h(PlusOutlined) type="primary" :href="`/add_picture/?spaceId=${props.id}`" target="_blank">创建图片</a-button>
-        <a-button :icon=h(EditOutlined) type="primary" @click="doBatchEdit">批量编辑</a-button>
+        <a-button :icon=h(BarChartOutlined) type="primary" ghost :href="`/space_analyze?spaceId=${props.id}`" target="_blank">空间分析</a-button>
+        <a-button :icon=h(EditOutlined)  @click="doBatchEdit">批量编辑</a-button>
 
         <a-popover title="使用情况" trigger="hover">
           <template #content>
@@ -55,7 +56,7 @@ import {
 import { message } from 'ant-design-vue'
 import { useRoute, useRouter } from 'vue-router'
 import PictureList from '@/components/PictureList.vue'
-import { EditOutlined, PlusOutlined } from '@ant-design/icons-vue'
+import { EditOutlined, PlusOutlined, BarChartOutlined } from '@ant-design/icons-vue'
 import { formatSize } from '@/utils'
 import { getSpaceByIdUsingGet, getSpaceVoByIdUsingGet } from '@/api/spaceController'
 import PictureSearchForm from '@/components/PictureSearchForm.vue'

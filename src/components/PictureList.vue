@@ -150,7 +150,7 @@ const doDelete = async (id: number) => {
     message.success("删除成功")
     props.onReload()
   } else {
-    message.error("删除失败，",res.message)
+    message.error("删除失败，" + res.message)
   }
 }
 

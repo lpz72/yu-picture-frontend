@@ -4,8 +4,9 @@
       <h2 style="margin-bottom: 16px">空间管理</h2>
       <a-space>
         <a-button :icon=h(PlusOutlined) type="primary" :href="`/add_space`" target="_blank">创建空间</a-button>
+        <a-button  type="primary" ghost :href="`/space_analyze?queryAll=1`" target="_blank">分析全空间</a-button>
+        <a-button  type="primary" ghost :href="`/space_analyze?queryPublic=1`" target="_blank">分析公共空间</a-button>
       </a-space>
-
     </a-flex>
 
     <!--  搜索框  -->
@@ -55,6 +56,7 @@
         </template>
         <template v-else-if="column.key === 'action'">
           <a-space :size="2" wrap>
+            <a-button type="link" :href="`/space_analyze?spaceId=${record.id}`" target="_blank">分析</a-button>
             <a-button type="link" :href="`/add_space/?spaceId=${record.id}`" target="_blank">编辑</a-button>
             <a-popconfirm
               title="是否确认删除?"
