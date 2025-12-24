@@ -27,6 +27,15 @@
             allowClear
           />
         </a-form-item>
+        <a-form-item label="空间类别">
+          <a-select
+            v-model:value="searchParams.spaceType"
+            placeholder="请选择空间类别"
+            :options="SPACE_TYPE_OPTIONS"
+            style="min-width: 180px"
+            allowClear
+          />
+        </a-form-item>
         <a-form-item >
           <a-button type="primary" html-type="submit">搜索</a-button>
         </a-form-item>
@@ -42,6 +51,10 @@
           <a-tag v-if="record.spaceLevel === 0" >{{ SPACE_LEVEL_MAP[record.spaceLevel] }}</a-tag>
           <a-tag v-if="record.spaceLevel === 1" color="blue" >{{ SPACE_LEVEL_MAP[record.spaceLevel] }}</a-tag>
           <a-tag v-if="record.spaceLevel === 2" color="orange">{{ SPACE_LEVEL_MAP[record.spaceLevel] }}</a-tag>
+        </template>
+        <template v-else-if="column.dataIndex === 'spaceType'">
+          <a-tag v-if="record.spaceType === 0" color="green" >{{ SPACE_TYPE_MAP[record.spaceType] }}</a-tag>
+          <a-tag v-if="record.spaceType === 1" color="cyan" >{{ SPACE_TYPE_MAP[record.spaceType] }}</a-tag>
         </template>
         <template v-else-if="column.dataIndex === 'spaceUseInfo'">
           <div>大小：{{formatSize(record.totalSize)}} / {{formatSize(record.maxSize)}}</div>
@@ -81,7 +94,7 @@ import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
 import { listPictureByPageUsingPost } from '@/api/pictureController'
 import { PIC_REVIEW_STATUS_ENUM, PIC_REVIEW_STATUS_MAP, PIC_REVIEW_STATUS_OPTIONS } from '@/constants/picture'
-import { SPACE_LEVEL_MAP, SPACE_LEVEL_OPTIONS } from '@/constants/space'
+import { SPACE_LEVEL_MAP, SPACE_LEVEL_OPTIONS, SPACE_TYPE_MAP, SPACE_TYPE_OPTIONS } from '@/constants/space'
 import { deleteSpaceUsingPost, listSpaceByPageUsingPost } from '@/api/spaceController'
 import { formatSize } from '@/utils'
 const columns = [
@@ -97,6 +110,10 @@ const columns = [
   {
     title: '空间级别',
     dataIndex: 'spaceLevel',
+  },
+  {
+    title: '空间类别',
+    dataIndex: 'spaceType',
   },
   {
     title: '使用情况',

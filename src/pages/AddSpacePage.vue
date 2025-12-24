@@ -1,7 +1,7 @@
 <template>
   <div id="addSpacePage">
     <h2 style="margin-bottom: 16px">
-      {{route.query?.spaceId ? "修改空间" : "创建空间"}}
+      {{route.query?.spaceId ? "修改" : "创建"}} {{ SPACE_TYPE_MAP[spaceType]}}
     </h2>
 
     <a-form
@@ -53,7 +53,7 @@
 
 <script setup lang="ts">
 
-import { onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import {
   editSpaceUsingPost, getSpaceByIdUsingGet,
   getSpaceVoByIdUsingGet,
@@ -62,12 +62,12 @@ import {
 } from '@/api/spaceController'
 import { message } from 'ant-design-vue'
 import { useRoute, useRouter } from 'vue-router'
-import { SPACE_LEVEL_ENUM, SPACE_LEVEL_OPTIONS } from '@/constants/space'
+import { SPACE_LEVEL_ENUM, SPACE_LEVEL_OPTIONS, SPACE_TYPE_ENUM, SPACE_TYPE_MAP } from '@/constants/space'
 import { formatSize } from '@/utils'
 import { useLoginUserStore } from '@/stores/useLoginUserStore'
 
 const space = ref<API.SpaceVO>()
-const spaceForm = reactive<API.SpaceAddRequest | API.SpaceUpdateRequest>({
+const spaceForm = reactive<API.uploadSpaceUsingPOSTParams | API.SpaceUpdateRequest>({
   spaceName: '',
   spaceLevel: SPACE_LEVEL_ENUM.COMMON,
 })
@@ -83,12 +83,13 @@ const router = useRouter()
 const handleSubmit = async (values: any) => {
   loading.value = true
 
-  const spaceId = space.value?.id;
+  let spaceId = space.value?.id;
   let res;
   if (!spaceId) {
     // 创建
     res = await uploadSpaceUsingPost({
-      ...spaceForm
+      ...spaceForm,
+      spaceType: spaceType.value
     })
   } else {
     // 更新
@@ -99,6 +100,7 @@ const handleSubmit = async (values: any) => {
   }
   if (res.code === 0 && res) {
     message.success("操作成功")
+    spaceId = spaceId ?? res.data
     // 判断是否是管理员，普通用户则跳转到空间详情页
     if (loginUser.userRole === "admin") {
       router.push({
@@ -157,6 +159,14 @@ const getSpaceLevel = async () => {
     message.error("加载空间级别失败，+",res.message)
   }
 }
+
+// 空间类别
+const spaceType = computed(() => {
+  if (route.query?.type) {
+    return Number(route.query?.type)
+  }
+  return SPACE_TYPE_ENUM.PRIVATE
+})
 
 onMounted(() => {
   getOldSpace()

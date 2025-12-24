@@ -54,14 +54,14 @@
               <a-space wrap>
                 <a-button type="primary" :icon="h(DownloadOutlined)" @click="doDownload">免费下载</a-button>
                 <a-button type="primary" ghost :icon="h(ShareAltOutlined)"  @click="doShare">分享</a-button>
-                <a-button :icon="h(EditOutlined)" v-if="canEdit" @click="doEdit">编辑</a-button>
+                <a-button :icon="h(EditOutlined)" v-if="canEditPicture" @click="doEdit">编辑</a-button>
                 <a-popconfirm
                   title="是否确认删除?"
                   ok-text="是"
                   cancel-text="否"
                   @confirm="doDelete"
                 >
-                  <a-button danger :icon="h(DeleteOutlined)" v-if="canEdit">删除</a-button>
+                  <a-button danger :icon="h(DeleteOutlined)" v-if="canDeletePicture" >删除</a-button>
                 </a-popconfirm>
               </a-space>
             </a-descriptions-item>
@@ -90,8 +90,21 @@ import { downloadImage, formatSize } from '@/utils'
 import { EditOutlined, DeleteOutlined, DownloadOutlined, ShareAltOutlined } from '@ant-design/icons-vue'
 import { useLoginUserStore } from '@/stores/useLoginUserStore'
 import ShareModal from '@/components/ShareModal.vue'
+import { SPACE_PERMISSION_ENUM } from '@/constants/space'
 
 const picture = ref<API.PictureVO>()
+
+// 通用权限检查函数
+function createPermissionChecker(permission: string) {
+  return computed(() => {
+    return (picture.value?.permissionList ?? []).includes(permission)
+  })
+}
+
+// 定义权限检查
+const canEditPicture = createPermissionChecker(SPACE_PERMISSION_ENUM.PICTURE_EDIT)
+const canDeletePicture = createPermissionChecker(SPACE_PERMISSION_ENUM.PICTURE_DELETE)
+
 
 // 获取到动态的参数id
 const props = defineProps<{
@@ -114,19 +127,6 @@ const fetchPictureDetail = async () => {
     message.error("获取图片详情失败，" + e.message)
   }
 }
-
-// 权限校验
-const loginUserStore = useLoginUserStore()
-const canEdit = computed(() => {
-  const loginUser = loginUserStore.loginUser
-  // 未登录不可编辑
-  if (!loginUser.id) {
-    return false
-  }
-
-  // 仅本人或管理员可编辑
-  return loginUser.id === picture.value?.userId || loginUser.userRole === "admin"
-})
 
 const router = useRouter()
 // 编辑事件

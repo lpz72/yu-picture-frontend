@@ -43,12 +43,16 @@
                 </a-popover>
               </a-space>
 
-              <a-space @click="e => doEdit(item,e)">
+              <a-space
+                v-if="canEditPicture"
+                @click="e => doEdit(item,e)">
                 <edit-outlined/>
                 编辑
               </a-space>
 
-              <a-space @click="e => showDelete(e)">
+              <a-space
+                v-if="canDeletePicture"
+                @click="e => showDelete(e)">
                 <a-popconfirm
                   title="是否确认删除?"
                   ok-text="是"
@@ -84,13 +88,17 @@ interface Props {
   dataList: API.PictureVO[],
   loading: boolean,
   showOp: boolean,
+  canEditPicture: boolean,
+  canDeletePicture: boolean,
   onReload: () => void
 }
 
 const props = withDefaults(defineProps<Props>(), {
   dataList: () => [],
   loading: false,
-  showOp: false
+  showOp: false,
+  canEditPicture: false,
+  canDeletePicture: false,
 })
 
 // 跳转到图片详情页

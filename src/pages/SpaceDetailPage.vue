@@ -2,11 +2,19 @@
   <div id="spaceDetailPage">
     <!-- 空间信息 -->
     <a-flex justify="space-between" style="margin-bottom: 10px">
-      <h2 style="margin-bottom: 16px">{{space?.spaceName}}（私有空间）</h2>
+      <h2 style="margin-bottom: 16px">{{space?.spaceName }} ({{ SPACE_TYPE_MAP[space?.spaceType] }})</h2>
       <a-space>
-        <a-button :icon=h(PlusOutlined) type="primary" :href="`/add_picture/?spaceId=${props.id}`" target="_blank">创建图片</a-button>
-        <a-button :icon=h(BarChartOutlined) type="primary" ghost :href="`/space_analyze?spaceId=${props.id}`" target="_blank">空间分析</a-button>
-        <a-button :icon=h(EditOutlined)  @click="doBatchEdit">批量编辑</a-button>
+        <a-button v-if="canUploadPicture" :icon=h(PlusOutlined) type="primary" :href="`/add_picture/?spaceId=${props.id}`" target="_blank">创建图片</a-button>
+        <a-button
+          v-if="space.spaceType === 1 && canManageSpaceUser"
+          :icon=h(TeamOutlined)
+          type="primary" ghost
+          :href="`/spaceUserManager/${id}`"
+          target="_blank">
+          成员管理
+        </a-button>
+        <a-button v-if="canManageSpaceUser" :icon=h(BarChartOutlined) type="primary" ghost :href="`/space_analyze?spaceId=${props.id}`" target="_blank">空间分析</a-button>
+        <a-button v-if="canEditPicture" :icon=h(EditOutlined)  @click="doBatchEdit">批量编辑</a-button>
 
         <a-popover title="使用情况" trigger="hover">
           <template #content>
@@ -28,7 +36,14 @@
 
 
     <!-- 数据展示 -->
-    <PictureList :dataList="dataList" :loading="loading" :showOp="true" :onReload="fetchData" />
+    <PictureList
+      :dataList="dataList"
+      :loading="loading"
+      :showOp="true"
+      :canEditPicture="canEditPicture"
+      :canDeletePicture="canDeletePicture"
+      :onReload="fetchData"
+    />
     <a-pagination
       style="text-align: right"
       v-model:current="searchParams.current"
@@ -47,7 +62,7 @@
 
 <script setup lang="ts">
 
-import { computed, h, onMounted, reactive, ref } from 'vue'
+import { computed, h, onMounted, reactive, ref, watch } from 'vue'
 import {
   listPictureTagCategoryUsingGet,
   listPictureVoByPageUsingPost,
@@ -56,7 +71,7 @@ import {
 import { message } from 'ant-design-vue'
 import { useRoute, useRouter } from 'vue-router'
 import PictureList from '@/components/PictureList.vue'
-import { EditOutlined, PlusOutlined, BarChartOutlined } from '@ant-design/icons-vue'
+import { EditOutlined, PlusOutlined, BarChartOutlined, TeamOutlined } from '@ant-design/icons-vue'
 import { formatSize } from '@/utils'
 import { getSpaceByIdUsingGet, getSpaceVoByIdUsingGet } from '@/api/spaceController'
 import PictureSearchForm from '@/components/PictureSearchForm.vue'
@@ -64,11 +79,26 @@ import Vue3ColorPicker, { ColorPicker } from 'vue3-colorpicker'
 import "vue3-colorpicker/style.css";
 import ShareModal from '@/components/ShareModal.vue'
 import BatchEditPictureModal from '@/components/BatchEditPictureModal.vue'
+import { SPACE_PERMISSION_ENUM, SPACE_TYPE_MAP } from '@/constants/space'
+
 
 const dataList = ref([])
 const loading = ref(true)
 const total = ref(0)
 const space = ref<API.SpaceVO>({})
+
+// 通用权限检查函数
+function createPermissionChecker(permission: string) {
+  return computed(() => {
+    return (space.value.permissionList ?? []).includes(permission)
+  })
+}
+
+// 定义权限检查
+const canManageSpaceUser = createPermissionChecker(SPACE_PERMISSION_ENUM.SPACE_USER_MANAGE)
+const canUploadPicture = createPermissionChecker(SPACE_PERMISSION_ENUM.PICTURE_UPLOAD)
+const canEditPicture = createPermissionChecker(SPACE_PERMISSION_ENUM.PICTURE_EDIT)
+const canDeletePicture = createPermissionChecker(SPACE_PERMISSION_ENUM.PICTURE_DELETE)
 
 // 获取到动态的参数id
 const props = defineProps<{
@@ -117,7 +147,7 @@ const fetchSpaceDetail = async () => {
       space.value = res.data
     // console.log(space)
   } else {
-    message.error("空间详情获取失败，",res.message)
+    message.error("空间详情获取失败，" + res.message)
   }
 }
 
@@ -161,8 +191,13 @@ const batchEditOnSuccess = () => {
 }
 
 onMounted(() => {
-  fetchData()
   fetchSpaceDetail()
+  fetchData()
+})
+
+watch(() => props.id, () => {
+  fetchSpaceDetail()
+  fetchData()
 })
 
 </script>

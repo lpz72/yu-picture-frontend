@@ -1,167 +1,185 @@
 declare namespace API {
-  type BaseresponseBoolean_ = {
+  type addSpaceUserUsingPOSTParams = {
+    spaceId?: number
+    spaceRole?: string
+    userId?: number
+  }
+
+  type BaseResponseBoolean_ = {
     code?: number
     data?: boolean
     message?: string
   }
 
-  type BaseresponseCreateOutPaintingTaskResponse_ = {
+  type BaseResponseCreateOutPaintingTaskResponse_ = {
     code?: number
     data?: CreateOutPaintingTaskResponse
     message?: string
   }
 
-  type BaseresponseGetOutPaintingTaskResponse_ = {
+  type BaseResponseGetOutPaintingTaskResponse_ = {
     code?: number
     data?: GetOutPaintingTaskResponse
     message?: string
   }
 
-  type BaseresponseInt_ = {
+  type BaseResponseInt_ = {
     code?: number
     data?: number
     message?: string
   }
 
-  type BaseresponseListImageSearchResult_ = {
+  type BaseResponseListImageSearchResult_ = {
     code?: number
     data?: ImageSearchResult[]
     message?: string
   }
 
-  type BaseresponseListPictureVO_ = {
+  type BaseResponseListPictureVO_ = {
     code?: number
     data?: PictureVO[]
     message?: string
   }
 
-  type BaseresponseListSpace_ = {
+  type BaseResponseListSpace_ = {
     code?: number
     data?: Space[]
     message?: string
   }
 
-  type BaseresponseListSpaceCategoryAnalyzeResponse_ = {
+  type BaseResponseListSpaceCategoryAnalyzeResponse_ = {
     code?: number
     data?: SpaceCategoryAnalyzeResponse[]
     message?: string
   }
 
-  type BaseresponseListSpaceLevel_ = {
+  type BaseResponseListSpaceLevel_ = {
     code?: number
     data?: SpaceLevel[]
     message?: string
   }
 
-  type BaseresponseListSpaceSizeAnalyzeResponse_ = {
+  type BaseResponseListSpaceSizeAnalyzeResponse_ = {
     code?: number
     data?: SpaceSizeAnalyzeResponse[]
     message?: string
   }
 
-  type BaseresponseListSpaceTagAnalyzeResponse_ = {
+  type BaseResponseListSpaceTagAnalyzeResponse_ = {
     code?: number
     data?: SpaceTagAnalyzeResponse[]
     message?: string
   }
 
-  type BaseresponseListSpaceUserAnalyzeResponse_ = {
+  type BaseResponseListSpaceUserAnalyzeResponse_ = {
     code?: number
     data?: SpaceUserAnalyzeResponse[]
     message?: string
   }
 
-  type BaseresponseLoginUserVO_ = {
+  type BaseResponseListSpaceUserVO_ = {
+    code?: number
+    data?: SpaceUserVO[]
+    message?: string
+  }
+
+  type BaseResponseLoginUserVO_ = {
     code?: number
     data?: LoginUserVO
     message?: string
   }
 
-  type BaseresponseLong_ = {
+  type BaseResponseLong_ = {
     code?: number
     data?: number
     message?: string
   }
 
-  type BaseresponsePagePicture_ = {
+  type BaseResponsePagePicture_ = {
     code?: number
     data?: PagePicture_
     message?: string
   }
 
-  type BaseresponsePagePictureVO_ = {
+  type BaseResponsePagePictureVO_ = {
     code?: number
     data?: PagePictureVO_
     message?: string
   }
 
-  type BaseresponsePageSpace_ = {
+  type BaseResponsePageSpace_ = {
     code?: number
     data?: PageSpace_
     message?: string
   }
 
-  type BaseresponsePageSpaceVO_ = {
+  type BaseResponsePageSpaceVO_ = {
     code?: number
     data?: PageSpaceVO_
     message?: string
   }
 
-  type BaseresponsePageUserVO_ = {
+  type BaseResponsePageUserVO_ = {
     code?: number
     data?: PageUserVO_
     message?: string
   }
 
-  type BaseresponsePicture_ = {
+  type BaseResponsePicture_ = {
     code?: number
     data?: Picture
     message?: string
   }
 
-  type BaseresponsePictureTagCategory_ = {
+  type BaseResponsePictureTagCategory_ = {
     code?: number
     data?: PictureTagCategory
     message?: string
   }
 
-  type BaseresponsePictureVO_ = {
+  type BaseResponsePictureVO_ = {
     code?: number
     data?: PictureVO
     message?: string
   }
 
-  type BaseresponseSpace_ = {
+  type BaseResponseSpace_ = {
     code?: number
     data?: Space
     message?: string
   }
 
-  type BaseresponseSpaceUsageAnalyzeResponse_ = {
+  type BaseResponseSpaceUsageAnalyzeResponse_ = {
     code?: number
     data?: SpaceUsageAnalyzeResponse
     message?: string
   }
 
-  type BaseresponseSpaceVO_ = {
+  type BaseResponseSpaceUser_ = {
+    code?: number
+    data?: SpaceUser
+    message?: string
+  }
+
+  type BaseResponseSpaceVO_ = {
     code?: number
     data?: SpaceVO
     message?: string
   }
 
-  type BaseresponseString_ = {
+  type BaseResponseString_ = {
     code?: number
     data?: string
     message?: string
   }
 
-  type BaseresponseUser_ = {
+  type BaseResponseUser_ = {
     code?: number
     data?: User
     message?: string
   }
 
-  type BaseresponseUserVO_ = {
+  type BaseResponseUserVO_ = {
     code?: number
     data?: UserVO
     message?: string
@@ -412,6 +430,7 @@ declare namespace API {
     id?: number
     introduction?: string
     name?: string
+    permissionList?: string[]
     picColor?: string
     picFormat?: string
     picHeight?: number
@@ -445,6 +464,7 @@ declare namespace API {
     maxSize?: number
     spaceLevel?: number
     spaceName?: string
+    spaceType?: number
     totalCount?: number
     totalSize?: number
     updateTime?: string
@@ -483,6 +503,7 @@ declare namespace API {
     sortOrder?: string
     spaceLevel?: number
     spaceName?: string
+    spaceType?: number
     userId?: number
   }
 
@@ -535,6 +556,15 @@ declare namespace API {
     usedSize?: number
   }
 
+  type SpaceUser = {
+    createTime?: string
+    id?: number
+    spaceId?: number
+    spaceRole?: string
+    updateTime?: string
+    userId?: number
+  }
+
   type SpaceUserAnalyzeRequest = {
     queryAll?: boolean
     queryPublic?: boolean
@@ -548,14 +578,39 @@ declare namespace API {
     period?: string
   }
 
+  type SpaceUserEditRequest = {
+    id?: number
+    spaceRole?: string
+  }
+
+  type SpaceUserQueryRequest = {
+    id?: number
+    spaceId?: number
+    spaceRole?: string
+    userId?: number
+  }
+
+  type SpaceUserVO = {
+    createTime?: string
+    id?: number
+    space?: SpaceVO
+    spaceId?: number
+    spaceRole?: string
+    updateTime?: string
+    user?: UserVO
+    userId?: number
+  }
+
   type SpaceVO = {
     createTime?: string
     editTime?: string
     id?: number
     maxCount?: number
     maxSize?: number
+    permissionList?: string[]
     spaceLevel?: number
     spaceName?: string
+    spaceType?: number
     totalCount?: number
     totalSize?: number
     updateTime?: string
@@ -590,6 +645,7 @@ declare namespace API {
   type uploadSpaceUsingPOSTParams = {
     spaceLevel?: number
     spaceName?: string
+    spaceType?: number
   }
 
   type User = {
