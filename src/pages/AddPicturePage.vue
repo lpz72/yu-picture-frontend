@@ -26,6 +26,7 @@
         :imageUrl="picture?.url"
         :picture="picture"
         :spaceId="spaceId"
+        :space="space"
         :onSuccess="onCropSuccess"
       />
       <ImageOutPainting
@@ -102,7 +103,7 @@
 <script setup lang="ts">
 
 import PictureUpload from '@/components/PictureUpload.vue'
-import { computed, h, onMounted, reactive, ref } from 'vue'
+import { computed, h, onMounted, reactive, ref, watchEffect } from 'vue'
 import { editPictureUsingPost, getPictureVoByIdUsingGet, listPictureTagCategoryUsingGet } from '@/api/pictureController'
 import { message } from 'ant-design-vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -110,6 +111,7 @@ import UrlPictureUpload from '@/components/UrlPictureUpload.vue'
 import ImageCropper from '@/components/ImageCropper.vue'
 import { EditOutlined,FullscreenOutlined } from '@ant-design/icons-vue'
 import ImageOutPainting from '@/components/ImageOutPainting.vue'
+import { getSpaceByIdUsingGet, getSpaceVoByIdUsingGet } from '@/api/spaceController'
 
 const picture = ref<API.PictureVO>()
 const pictureForm = reactive<API.PictureEditRequest>({})
@@ -234,7 +236,24 @@ const onOutPaintingSuccess = (newPicture: API.PictureVO) => {
   picture.value = newPicture
 }
 
+// 获取图片所在的空间
+const space = ref<API.SpaceVO>()
+const fetchSpace = async () => {
+  const spaceId = route.query?.spaceId
+  if (spaceId) {
+    const res = await getSpaceVoByIdUsingGet({id: spaceId})
+    if (res.code === 0 && res.data) {
+      space.value = res.data
+    } else {
+      message.error("加载空间失败，" + res.message)
+    }
 
+  }
+}
+
+watchEffect(() => {
+  fetchSpace()
+})
 
 onMounted(() => {
   getOldPicture()
